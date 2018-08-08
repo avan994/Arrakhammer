@@ -1,0 +1,89 @@
+﻿Build started 6/10/2017 2:43:56 PM.
+     1>Project "C:\Users\avan994\Desktop\SCAI\Arrakbot_source\SparCraft\VisualStudio\SparCraft.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\libraries\BWAPI/include /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D NOMINMAX /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\\" /Fd"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\source\Action.cpp ..\source\AllPlayers.cpp ..\source\AlphaBetaMove.cpp ..\source\AlphaBetaSearch.cpp ..\source\AnimationFrameData.cpp ..\source\Common.cpp ..\source\EnumData.cpp ..\source\Game.cpp ..\source\GameState.cpp ..\source\Hash.cpp ..\source\Logger.cpp ..\source\MoveArray.cpp ..\source\Player.cpp ..\source\PlayerProperties.cpp ..\source\Player_AlphaBeta.cpp ..\source\Player_AttackClosest.cpp ..\source\Player_AttackDPS.cpp ..\source\Player_AttackWeakest.cpp ..\source\Player_Cluster.cpp ..\source\Player_Kiter.cpp ..\source\Player_KiterDPS.cpp ..\source\Player_Kiter_NOKDPS.cpp ..\source\Player_NOKDPS.cpp ..\source\Player_PortfolioGreedySearch.cpp ..\source\Player_Random.cpp ..\source\Player_UCT.cpp ..\source\PortfolioGreedySearch.cpp ..\source\SparCraft.cpp ..\source\SparCraftAssert.cpp ..\source\SparCraftException.cpp ..\source\Timer.cpp ..\source\TranspositionTable.cpp ..\source\UCTSearch.cpp ..\source\Unit.cpp ..\source\UnitProperties.cpp ..\source\UnitScriptData.cpp ..\source\WeaponProperties.cpp
+         Action.cpp
+         AllPlayers.cpp
+         AlphaBetaMove.cpp
+         AlphaBetaSearch.cpp
+         AnimationFrameData.cpp
+         Common.cpp
+         EnumData.cpp
+         Game.cpp
+         GameState.cpp
+         Hash.cpp
+         Logger.cpp
+         MoveArray.cpp
+         Player.cpp
+         PlayerProperties.cpp
+         Player_AlphaBeta.cpp
+         Player_AttackClosest.cpp
+         Player_AttackDPS.cpp
+         Player_AttackWeakest.cpp
+         Player_Cluster.cpp
+         Player_Kiter.cpp
+         Player_KiterDPS.cpp
+         Player_Kiter_NOKDPS.cpp
+         Player_NOKDPS.cpp
+         Player_PortfolioGreedySearch.cpp
+         Player_Random.cpp
+         Player_UCT.cpp
+         PortfolioGreedySearch.cpp
+         SparCraft.cpp
+         SparCraftAssert.cpp
+         SparCraftException.cpp
+     1>c:\users\avan994\desktop\scai\arrakbot_source\sparcraft\source\sparcraftassert.cpp(17): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\time.inl(112) : see declaration of 'localtime'
+     1>c:\users\avan994\desktop\scai\arrakbot_source\sparcraft\source\sparcraftassert.cpp(40): warning C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'vsprintf'
+         Timer.cpp
+         TranspositionTable.cpp
+         UCTSearch.cpp
+         Unit.cpp
+         UnitProperties.cpp
+         UnitScriptData.cpp
+         WeaponProperties.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\SparCraft_d.lib" /NOLOGO C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Action.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\AllPlayers.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\AlphaBetaMove.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\AlphaBetaSearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\AnimationFrameData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Common.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\EnumData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Game.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\GameState.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Hash.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Logger.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\MoveArray.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\PlayerProperties.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_AlphaBeta.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_AttackClosest.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_AttackDPS.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_AttackWeakest.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_Cluster.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_Kiter.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_KiterDPS.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_Kiter_NOKDPS.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_NOKDPS.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_PortfolioGreedySearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_Random.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Player_UCT.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\PortfolioGreedySearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\SparCraft.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\SparCraftAssert.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\SparCraftException.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Timer.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\TranspositionTable.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\UCTSearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\Unit.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\UnitProperties.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\UnitScriptData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\WeaponProperties.obj
+         SparCraft.vcxproj -> C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\SparCraft\SparCraft_d.lib
+     1>Done Building Project "C:\Users\avan994\Desktop\SCAI\Arrakbot_source\SparCraft\VisualStudio\SparCraft.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:27.79

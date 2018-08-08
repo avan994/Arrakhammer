@@ -1,0 +1,83 @@
+﻿Build started 6/10/2017 2:43:56 PM.
+     1>Project "C:\Users\avan994\Desktop\SCAI\Arrakbot_source\BOSS\VisualStudio\BOSS.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\libraries\BWAPI/include/ /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D NOMINMAX /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\\" /Fd"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\source\ActionInProgress.cpp ..\source\ActionSet.cpp ..\source\ActionType.cpp ..\source\ActionTypeData.cpp ..\source\BOSSAssert.cpp ..\source\BOSSException.cpp ..\source\BuildOrder.cpp ..\source\BuildOrderPlot.cpp ..\source\CombatSearch.cpp ..\source\BOSS.cpp ..\source\BuildingData.cpp ..\source\CombatSearch_BestResponse.cpp ..\source\CombatSearch_BestResponseData.cpp ..\source\CombatSearch_Bucket.cpp ..\source\CombatSearch_BucketData.cpp ..\source\CombatSearch_IntegralData.cpp ..\source\CombatSearchParameters.cpp ..\source\CombatSearchResults.cpp ..\source\CombatSearch_Integral.cpp ..\source\Constants.cpp ..\source\BuildOrderSearchGoal.cpp ..\source\DFBB_BuildOrderSearchParameters.cpp ..\source\DFBB_BuildOrderSearchResults.cpp ..\source\DFBB_BuildOrderSmartSearch.cpp ..\source\DFBB_BuildOrderStackSearch.cpp ..\source\Eval.cpp ..\source\GameState.cpp ..\source\HatcheryData.cpp ..\source\BOSSLogger.cpp ..\source\JSONTools.cpp ..\source\NaiveBuildOrderSearch.cpp ..\source\PrerequisiteSet.cpp ..\source\Tools.cpp ..\source\UnitData.cpp
+         ActionInProgress.cpp
+         ActionSet.cpp
+         ActionType.cpp
+         ActionTypeData.cpp
+         BOSSAssert.cpp
+         BOSSException.cpp
+         BuildOrder.cpp
+         BuildOrderPlot.cpp
+     1>c:\users\avan994\desktop\scai\arrakbot_source\boss\source\bossassert.cpp(15): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\time.inl(112) : see declaration of 'localtime'
+     1>c:\users\avan994\desktop\scai\arrakbot_source\boss\source\bossassert.cpp(38): warning C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'vsprintf'
+         CombatSearch.cpp
+         BOSS.cpp
+         BuildingData.cpp
+         CombatSearch_BestResponse.cpp
+         CombatSearch_BestResponseData.cpp
+         CombatSearch_Bucket.cpp
+         CombatSearch_BucketData.cpp
+         CombatSearch_IntegralData.cpp
+         CombatSearchParameters.cpp
+         CombatSearchResults.cpp
+         CombatSearch_Integral.cpp
+         Constants.cpp
+         BuildOrderSearchGoal.cpp
+         DFBB_BuildOrderSearchParameters.cpp
+         DFBB_BuildOrderSearchResults.cpp
+         DFBB_BuildOrderSmartSearch.cpp
+         DFBB_BuildOrderStackSearch.cpp
+         Eval.cpp
+         GameState.cpp
+         HatcheryData.cpp
+         BOSSLogger.cpp
+         JSONTools.cpp
+         NaiveBuildOrderSearch.cpp
+         PrerequisiteSet.cpp
+         Tools.cpp
+         UnitData.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"../bin/BOSS_d.lib" /NOLOGO C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\ActionInProgress.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\ActionSet.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\ActionType.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\ActionTypeData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BOSSAssert.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BOSSException.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BuildOrder.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BuildOrderPlot.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BOSS.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BuildingData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch_BestResponse.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch_BestResponseData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch_Bucket.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch_BucketData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch_IntegralData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearchParameters.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearchResults.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\CombatSearch_Integral.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\Constants.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BuildOrderSearchGoal.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\DFBB_BuildOrderSearchParameters.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\DFBB_BuildOrderSearchResults.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\DFBB_BuildOrderSmartSearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\DFBB_BuildOrderStackSearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\Eval.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\GameState.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\HatcheryData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\BOSSLogger.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\JSONTools.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\NaiveBuildOrderSearch.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\PrerequisiteSet.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\Tools.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Debug\BOSS\UnitData.obj
+         BOSS.vcxproj -> C:\Users\avan994\Desktop\SCAI\Arrakbot_source\BOSS\VisualStudio\../bin/BOSS_d.lib
+     1>Done Building Project "C:\Users\avan994\Desktop\SCAI\Arrakbot_source\BOSS\VisualStudio\BOSS.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:26.44

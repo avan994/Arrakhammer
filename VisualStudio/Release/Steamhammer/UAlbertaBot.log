@@ -1,0 +1,63 @@
+﻿Build started 8/30/2017 12:34:34 PM.
+     1>Project "C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\UAlbertaBot.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../BOSS/source /I../SparCraft/source /I../source /IC:\libraries\BWAPI/include /IC:\libraries\BWTAlib_2.2/include /Zi /nologo /W3 /WX- /MP /Ox /Ob2 /Oi /Ot /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D NOMINMAX /D _WINDLL /D _UNICODE /D UNICODE /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\\" /Fd"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\vc120.pdb" /Gd /TP /wd4996 /analyze- /errorReport:prompt ..\Source\StrategyBossZerg.cpp
+         StrategyBossZerg.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\..\bin\Steamhammer.dll" /INCREMENTAL:NO /NOLOGO C:\libraries\BWAPI/lib/BWAPI.lib Release/SparCraft/SparCraft.lib ../../BOSS/bin/BOSS.lib C:\libraries\BWTAlib_2.2/lib/BWTA.lib "C:\libraries\BWTAlib_2.2/lib/libboost_system-vc120-mt-1_56.lib" "C:\libraries\BWTAlib_2.2/lib/libboost_thread-vc120-mt-1_56.lib" "C:\libraries\BWTAlib_2.2/lib/libCGAL-vc120-mt-4.4.lib" "C:\libraries\BWTAlib_2.2/lib/libgmp-10.lib" "C:\libraries\BWTAlib_2.2/lib/libmpfr-4.lib" "C:\libraries\BWTAlib_2.2/lib/libboost_filesystem-vc120-mt-1_56.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\..\bin\Steamhammer.pdb" /MAP /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /SAFESEH /DLL C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Base.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\BOSSManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\BuildingData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\BuildingManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\BuildingPlacer.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\BuildOrder.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\BuildOrderQueue.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\CasterManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\CombatSimulation.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\CombatCommander.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Common.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\DetectorManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Dll.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\FAP.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\GameCommander.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\InformationManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\JSONTools.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Logger.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\LurkerManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\MacroAct.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\MapGrid.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\MapTools.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\MedicManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\MeleeManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\MicroManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Config.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Micro.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\OverlordManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\ParseUtils.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\ProductionManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Random.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\RangedManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\ScoutManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\ZSimcity.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\Squad.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\SquadData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\StaticDefenseManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\StrategyBossZerg.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\StrategyManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\TankManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\TimerManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\TransportManager.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\UABAssert.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\UAlbertaBotModule.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\UnitData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\UnitUtil.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\WorkerData.obj
+         C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\Release\Steamhammer\WorkerManager.obj
+            Creating library C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\..\bin\Steamhammer.lib and object C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\..\bin\Steamhammer.exp
+         Generating code
+         Finished generating code
+         UAlbertaBot.vcxproj -> C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\\..\bin\Steamhammer.dll
+     1>Done Building Project "C:\Users\avan994\Desktop\SCAI\Arrakbot_source\Steamhammer\VisualStudio\UAlbertaBot.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:19.41
