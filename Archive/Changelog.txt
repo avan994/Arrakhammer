@@ -1,0 +1,388 @@
+Patch 45 (technically 4X-XX)
+Made a large number of undocumented small changes and tweaks over a long period of time
+Simcity proof-of-concept bruteforce code was written. Not fully implemented.
+Runbies were added, tested, and tweaked. 
+
+Patch 44
+Implemented mineral locking. Raised/lowered the max worker counts to 2.0 per patch, as appropriate. 
+Adjusted some other things. 
+Zerglings will no longer run away from static defenses or ranged units they are very close to. Fight to the end! 
+More worker code centralization. 
+Added in a stub for runbies on bunkers early game. Still testing. 
+Removed the mineral sink unit code. All unit production should be handled in one place.
+Added in an unlikely check for an unknown gas bug. 
+
+Patch 43
+Decreased worker transfers, as they are wasteful and dangerous. No longer allows long distance gas transfers.
+Now selects the best hatchery for producing new units (most larva) and workers (most-larva most-below-saturation-threshold).
+Hydralisks will now retreat towards allied lurkers and focus fire units targeted by (presumably) other hydralisks. It is assumed that overkill does not occur since hydralisks fire quickly, but just in case, this bonus priority is not assigned to vulture spider mines or when regrouping. 
+Removed the early turnaround vs. scourge. No need to rush, just burst it down.
+
+Patch 42
+Some bugfixes to the combat sim.
+Reduced the defense radius back down to 600 from 1200. It's still somewhat weird if the base neighbors an enemy base. 
+Tried tweaking drone defense code to make it more reasonable.
+Increased the order defense radius to 25*30 so hydralisks don't ignore units as often on defense.
+Changed the squad regroup check for defense to use the closest unit instead of the average position, and to always return if no closest unit is found (queens/overlords should run).
+
+
+Patch 41
+Tweaked the expansion selection so that it now prefers the closest base to any previous base a lot more, rather than just the base closest to the main. This is a hack to fix the problems on Benzene and prevent the bot from expanding towards the enemy on large maps -- it's safe for zerg to expand towards the hidden base anyway.
+
+Decreased the overlord leash distance 
+Added in artosis pylon detection. 
+Fixed some other bugs.
+Fixed a bug where a dead builder unit that has not yet issued a build command, will get a building stuck in the queue. Also fixed it for extractors -- extractor trick should now be possible. The fix was to check if an extractor was built on the location -- that way we don't mistake its morphing for death [as the drone itself "dies" upon morphing into an extractor].
+
+Patch 40 
+-Workers will now pretend building was attempted if they see enemy buildings in a region -- makes them take other bases when they arrive. 
+-Added in BBS/Zergling/Cannon attack per base defense code. It requires a minimum of 3 workers be on minerals and has an acquire range of 2,000. May need some testing.
+-Added in aggressive lurker burrowing. Burrowed lurkers supporting moving lurkers will remain burrowed, and supported lurkers will burrow more aggressively close to the enemy. 
+-Now simulating firebats as vultures. Zerglings ought to be less happy about fighting those, right? 
+-CanEscape now includes siege tanks within 6 range for units.
+-Adjusted overlord and survey code -- overlords should now be more cautious.
+-Now sends a surveylord in every matchup, but in some matchups it will retreat the overlord back home upon finding the enemy base. 
+
+Patch 39
+-Centralized some worker management code, some small bugfixes and adjustments. 
+-Bot now reserves and unreserves bases as intended. Does not count liftable buildings [i.e. Infested CC's] against buildable bases.
+-Bugfixed the queue-blocking on building.
+-Modified the base selection code to favor closer bases more, and to count it from the nearest possible base either owned or reserved by us. This way it'll expand to bases farther away from the enemy if it's near another one of our bases. 
+
+Patch 38
+-More mutalisk stacking.
+-Flying squad now prioritizes hunting down tanks and reavers. 
+-Bugfixes to overlord distribution and spider mine killing.
+
+Patch 37
+-Range clipping is now ignored for defend orders for ranged units. 
+-Reincreased the combat sim radius a bit for flying. 
+-Fixed overlord distributions.
+-Added in a fix for intended vulture spider clearing. Untested.
+-Removed the ignoring of enemy workers in our region for base defense squads. 
+-Two mandatory defense units are kept in each base per region if the enemy has overlord hunters. 
+
+Patch 36
+-Decreased the no-sim defense radius to 7 for normal squads, and 3 for the flying squad. Unit suicide, especially with mutalisks, is fairly unacceptable. 
+-Added in distributed overlords. Does not check for the safety of the overlord yet.
+-Tweaked max sunkens to 5! I think the bot can handle it now. Training wheels off!
+-Made it so that fast units are not clipped out (vultures by, ahem, mutalisks) when defending. 
+-Changed combat workers in WorkerManager, and zerglings in MeleeManager, to use ZerglingAttack instead. Currently drones use the default kiting vector instead of accumulated. Drones should really just be added to melee manager, though, at some point. 
+
+Patch 35
+-Added a check on the radial regional defense check, which checks if the unit is actually in another one of our defense-requiring regions. This way false flag defenses in the wrong region won't trigger. 
+-Changed the guardian code to divide the acceleration amount by 256, due to the weird units of the acceleration. [It's a fraction out of 256, 256 representing a pixel] Will this work better? Who knows...
+
+Patch 34
+-Took back out the flying-squad-only "no-retreat if no enemies are in range" combat sim designation. Mutalisks are being too aggressive these days. 
+-Added in scarab dodging for hydralisks/zerglings. 
+-Changed the enemy-unit-inclusion for defense zones to check the unit's position relative to the radius of the region as well, rather than just the region itself [it had proven to be too small most of the time]. 
+-Allowed healthy lurkers to burrow much closer, although unhealthy lurkers will retain the same caution levels.
+-Increased the tolerable radius for lurkers to remain burrowed. Generally, this should make them unburrow less when issued a regroup order to a very nearby region. 
+
+Patch 33
+-Tweaked the priorities for hydralisks and mutalisks.
+-One of the priority changes should fix an unintended bug where defending mutalisks would suicide into turrets.
+-More tweaks to lurkers
+-Spore colony for natural is now built at chokepoint instead
+-Added in cumulative threat kiting for mutalisks and hydralisks (essentially, a simple potential field). 
+
+Patch 32
+-Decreased the emergency ending time by 15 seconds (15*24 frames). 
+-Now tries to find horizontal/vertical positions, and building count only counts colonies, chambers, and dens.
+-Decreased the idlelord wander radius. 
+-Added facing checks to some cases for zerglings and air units. If we're flanking the target, we likely don't need to split in advance.
+-Wrote a general isThreat function in UnitUtil that is now attached to the ranged, lurker, and melee managers. Includes dangerous units such as spellcasters by default. Includes attacking enemies, even if they are not capable of attacking the unit itself (i.e. missile turrets). 
+-Started writing LeastDefendedAir code. 
+-Did a lazy fix to building spore colonies, which builds one at main and one at natural. Doesn't necessarily replenish them correctly.
+-Added a feature which makes units run combat sim when they're too far from the defense zone (> 5*32) and some graphics to help debug it.
+
+Patch 31
+-Added in an oscillating cross-shaped animation for the attack at max, changed the colors of sunken display/lurker line splash display.
+-Set the default values for preferences in the initialization of StrategyBossZerg for specifically zerg, so as to not prefer guardians at all. 
+-Factors in the unit's current velocity into storm dodging. Presumably this is also their facing direction.
+-Now, we assign idle workers to mineral fields over the depot limit now, but when a new hatchery is built (onUnitComplete in WorkerManager), we try to rebalance workers according to how saturated the bases are. To make this work, we have to make assigned mineral workers check if their target is an empty mineral -- if it's not, reassign the worker. 
+-Hatchery cancel bug was still present -- just in case, in Combat Commander code, we now infer a dead base if the units are on site and see no depot nearby whatsoever. 
+-Attack at max now is also triggered at 7+ bases with 125/200 [i.e. 250 in code] supply and more than 40 mineral workers. Added in a red square for style/debugging.
+-Adjusted the 9HatchLing build. 
+
+
+Patch 30
+Removing the code that makes healthy mutalisks continue trying to hit workers irrespective of HP. I think the combat sim is more respectable now. 
+Fixed the bug for hatchery cancels and combined it with infestation on unit morph. 
+For rigor, included a baseLost check in InformationManager in updateUnitInfo to check for bad depots in the unit info. This removes bad depots as well as the bad base. 
+Changed the build against Iron.
+Added in a 3hatch before pool lurkers build in place of the 12pool lurker build. 
+Assigned overlords to defense squads. Fixed a bug in the overlord manager that would make the overlords not detect() if their squad order was defense. Highlighted defense overlords.
+
+
+Patch 29
+Changed the combat sim to make units count siege tanks in tank-mode. Likely better than them never fighting.
+Created a per-lurker ambush counter. Untested. 
+Put in the code for the building manager where building workers search the zone for obstacles or fellow workers and react appropriately. Untested.
+
+
+
+Patch 28
+Switched the mutalisk attacks to use patrol instead. Perhaps this will work better. 
+Allowed zerglings to surround moving targets below 60 HP. This way they'll handle silly running units a bit better... 
+Added in guardian micro! It works! :D
+Changed the mutalisk turn-around to use patrol instead of attack.
+Patched up Protoss builds, including a bunch of hydralisk builds.
+Added some code that makes workers that failed to build something search for the closest unit in 4*32. If it's an ally, the worker itself moves randomly away from its original location. If it's not, it attacks the blocking object. Hopefully this fixes a certain bug.
+Added in delayed sunken morphing. If the enemy is nowhere near, it won't morph, unless we have many bases. It also won't create any of the standard creep colonies if it is known that the enemy has no notably standing army. This could create some vulnerabilities to rushes but should be worth it for any normal Protoss. 
+
+Patch 27
+-Made so that mutalisks ordered to defend will ignore buildings if they are outside the radius 20*32 of the defense zone. 
+-Decreased the workers per patch in the config file to 1.2 from 1.6. Might have extreme effects. Test.
+-Added in code that makes melee units finish off very low HP units before retreating. 
+-Previously I added Pneumatized Carapace as a mandatory upgrade for scouterlords. However, this is a clear waste of resources in ZvZ, so I disable that mandatory upgrade now. 
+-Wrote Ambush-lurkers. Still testing.
+-Added in a facing check for mutalisks to make sure they initiate an attack if they're the wrong way after oscillating. We consider 5 frames ahead because turn rate is 40, out of 256 (corresponding to 360 degrees) that's 4 frames to turn around, +1 to be safe. Thanks to jaj for telling me some obscure details about BWAPI angles!
+-Mutalisks now consider the projected position when computing their distance. Should make them turn around earlier against a running target. 
+-Added 15 hp to marines in the sunken targeting code, since medics can heal them a lot in the time it takes a sunken to attack. Added 1 to all other units, since they could regen during that timeframe. 
+-Fixed the lurker line splash computation code. I think. 
+-Borrowed the builds for ZvZ from Liquipedia and turned them into a bot-readable form; optimized them a bit.
+-Considering using cowardlyThreat to classify turning goliaths and decide when to chase them... but maybe it'll be enough to just use the ProjectedPosition as the targeting position instead. This ought to make the mutalisks turn earlier against a running target.
+-Raised the mutalisk HP for potshotting workers during a regroup to max-10, or 110, from 80.
+-Modified the mutalisk priorities -- if the swarm has 11+ mutalisks, will now maintain turret/bunker priority at 13, assuming they can kill them through repair.
+-Decreased the combat sim radius for mutas from the normal config value to 12*32. 
+-Changed the combat sim minimum time before retreat to 150/0 for mainattack when the melee manager has detected fighting, and 100 for everything else (i.e. flying).
+
+
+Patch 26
+InformationManager changes:
+Changed the closeEnough for base-change detection to have a slack of 3x2 away from BWTA's computed location. This way we won't detect our own macro hatch as the base being lost. 
+Made baseLost a public method.
+BuildingManager changes:
+On canceling a non-macro hatchery, we check and record it as a baseLost now. 
+Started writing a 9Pool based on the Liquipedia, not tested yet. 
+Other:
+Changed infested terran to account for shield damage when computing explosion value. 
+Removed the small tendency of hydralisks to split by avoiding allies when fighting reavers/spider mines/infested. They weren't working anyway, and concaves/backoff handles it naturally enough. 
+Reduced the must-run range for hydralisks v. zealots to 32 instead of 64.
+Hydralisks will no longer try to kite if the target is moving away from them. May not be best in some cases. 
+
+
+Patch 25
+Lurkers now sum together priorities of units inside the AOE of a primary target. Still testing.
+Added in custom builds for Dave Churchill and ICELAB. Still testing.
+Fixed a bug where hydralisks in queue would check if a pool still existed instead of a den.
+Added in a static defense manager that calculates the optimal targets for sunkens/spores. Still testing.
+Re-optimized the ZvT 2HatchMuta/3HatchMuta builds. Added in 2HatchMuta in place of 12Pool[Muta] again. 
+Fixed a bug where the original Command Center/corresponding base would not get removed when the CC is infested. This should fix the units clustering to the "ghost base" after infestation problem. 
+
+Patch 24
+Fixed infested terran range to be 60 from center, rather than assuming 80. Thanks to Ankmairdor!
+Infested now weight workers with +25 value. 
+Fixed a bug that would cause infested not to compute dmg for any real units. 
+Tweaked the assessment parameters a little.
+Wrote a function that computes the (unupgraded) damage a unit deals to a target.
+
+
+Patch 23
+Added storm dodging! Finds the nearest storm within 4*32 when stormed. Treated as a special case (see below). Traverses x or y, whichever is faster, depending on its distance from the center of the storm. 
+Added code in MicroManager which checks special micro cases for all units, regardless of what they are. This should technically override all other commands. 
+With Ankmairdor's help, added code in Sparcraft's Unit.cpp to the Unit::speed function that checks which player it is, and returns their top speed taking into consideration speed upgrades. Amazing! Hydralisks are way less passive!
+Added a specific change that forces the bot to produce drones [off-book] when it has 6+ sunkens, less than 3 bases, and less drones than mineral patches. 
+Increased Squad.cpp's StayInFight time to 100 from 60. Will need further testing. 
+
+
+Patch 22
+Further modified army/drone production assessment. Fixed some bugs, now mass-produces drones in response to mass defenses.
+Production manager now selects the first unsaturated depot when producing drones, unless we have no depots. 
+Added Flash's concave code to zerglings and hydralisks only. Time will tell what this brings...
+Mutalisk bug with not kiting is now fixed. 
+Made it so that infested production is now possible. 
+Modified lurker code to be more conservative about unburrowing or regrouping when near enemy range units.
+
+
+Patch 21
+Added assessment for army/drone production. Now more likely to produce army when in danger, or when way ahead. 
+Put in the mineral-harvesting of empty minerals in building manager. Worker movement is all over the place...
+
+Patch 20
+Added a change which makes combat sim account for enemy air units when the army possesses units that can shoot air. 
+Added infested terrans. Factored in their splash damage, range, and surrounding units' size types.
+Allowed it to produce zerglings again if a large mineral bank has been accumulated. In some cases we may want to produce them to harass, anyway.
+Fixed a bug that was probably causing it to not select the correct hatchery to turn into a lair. Should work now -- only main base lairs. 
+Took out the accelerating check in SuperSmartMove. Might work better.
+Added a few safety checks trying to figure out crashes.
+Modded the strategy boss to prefer hydralisks for Protoss again.
+Changed the range clipping in RangedManager to tolerate longer ranges. A temporary fix.
+The bot now does not count zealots towards either mutalisks or hydralisks. 
+The combat sim display has been turned on.
+Forcing the bot to get as many drones as mineral/gas when it has 3 more bases now.
+
+
+Patch 19
+Flying ranged units now ignore buildings too far away from the order location. 
+Stimmed marines now count for double the marines with half HP --- is this accurate?
+SmartMove, AttackMove, and Attack now spam the command when the unit is trying to move but braking. 
+Queens now see non-threat buildings with priority of -3, this should make this ignore them as the minimum priority is -2.
+Early game bunkers are now assumed to have a number of marines scaling with the time elapsed since 3.5*60, divided by the time it takes to train a marine. 
+Sunken placement now increases builddist from 0 to 1 if there are more than 4 buildings in the specified region. Temporary fix for tendency of sunkens to wall.
+/*Changed the needDroneNext condition to the correct intended version, which requires at minimum 5*nBase workers or nMineralPatches, whichever is smaller, instead of the greater. */ Commented it out.
+Changed the economy ratio to not count buildings, this'll make it build more in the midgame.
+Mutalisks will now try to ignore things until they've scouted a base and targeted either a worker, threat [weapon], or reached the destination and found nothing. Untested. 
+Removed queen per siege tank spawning, now only gets 1 queen ever. 
+Tweaked mutalisk preference for terran to weight siege tanks more and goliaths less. 
+Moved the ignore-building check into the check that also sometimes checks for proxies. Should work now.
+
+Patch 18
+Added queens with broodlings! 1 + siegetanks/2 against Terran, 0 + high templars/2 against P. None against Z.
+Hydralisks now retreat when under 20 HP, with speed, but only if the squad is small [~16-].
+Zerglings no longer retreat if the (melee) squad is large [~30+].
+
+Patch 17
+Raised the number of defenders per unit to 4 in CombatCommander
+Units will now scout out the bases for the first 8 minutes of elapsedTime if the enemy base has not been found
+Added in a target check for regrouping -- skips the flank clipping if the lurker is in the process of burrowing as well. This has not been tested yet! Could crash.  
+Modified the macro code, more mid-game power
+Ling/lurker/guardian preferences computed in denOverSpire and used for tech/unit composition... may be a bit buggy, seems to strongly prefer lurkers. 
+Added in some safeguards for possible crashes in the overlord/zergling managers
+Added in SuperSmartMove. Zerglings within 6 range now use it, as well as ranged units/Hydralisks kiting when their original position is unwalkable. 
+
+
+Patch 16
+Modified the kiting ranged unit code to use KiteVector instead of just the displacement. This ought to be better.
+Edited some things to make the code more robust
+Changed it so mutalisks ignore all units except closeby enemy workers when retreating, if they have hp
+Added in mutalisk-targeting-communication; if a target has already been targeted by another mutalisk within 10*32 range, its attack priority is not distance clipped. This should lead to mutalisks choosing the same target more often.
+In check for completed buildings in buildings manager, added a check to cancel heavily damaged buildings. 
+Random critter movement idle overlords! They stay within a few feet of the main base
+Made it so that sunkens aren't queued up until creep colonies are finished
+Added in various parameters biasing towards lurkers, including LurkerPreference
+-If LurkerPreference is less than 0, the bot will avoid getting lurkers altogether. 
+-If it is greater than 20, then it will convert all hydralisks to lurkers. 
+Tweaked hydralisk micro to kite against marines
+Changed placement for closeby chokepoints to simply use the chokepoint position itself
+Added getMyLeastDefendedBase in InformationManager.cpp
+Made the vulture code use least defended base instead
+Mineral line sunkens are completed for ALL bases
+Added the location check in ProductionManager, setting desiredLocation to leastDefended
+Changed the 3HatchDenMuta build meant for krasi0 to include an early 9pool, should stop him from greedy expanding
+Reverted the change that causes units to regroup while on defense. Now they'll keep fighting!
+Changed the retreat switch values, added one that keeps units in the fight for a while
+Added the SpecOps squad type to SquadOrder.h, added handleSpecOps in Squad.cpp and updateSpecOps in CombatCommander. Currently, an empty squad template that does nothing
+Added an OverpoolLing build to the protoss lineup
+
+Patch 15
+With bft's help, removed stray overlords
+Fixed overlord bugs
+Reduced wastefulness in hydralisk movement. Makes hydralisks chase after targets moving outta range.
+
+
+
+Patch 14
+Took out the thing that omits zerglings/zealots if they're out of range and not in range of any enemies
+Reduced the minimum regroup/retreat timing in  by a factor of 5. [From 5 to 1 s?]
+In CombatCommander, made survey squads scout the map, allowed the survey squad to recruit new overlords if the previous one is dead every several thousand minutes. 
+Connected the overlord manager to squads in squad.cpp. Overlords no longer use detector manager!
+Detectors will now regroup normally. So will overlords. 
+
+Patch 13
+Wrote the basis for an overlord manager. Still incomplete. Could try with survey overlord.
+Increased chokepoint cutoff from 80 to 4*32.
+Zergling surround code added! :D
+3Hatch Hydra build added (back?) to Protoss builds!
+OverhatchLing and OverhatchExpoLing builds added!
+Tweaked strategy to consider zealots as favoring den again, and other macro changes
+Fixed a bug that would cause the bot never to build Queen's Nest
+Added mineral line sunkens against vultures! Huge change:
+-Added DefenseLocation parameter to BuildOrderItem in BuildOrderQueue.h
+-Added b.defenseLocation = currentItem.defenseLocation in ProductionManager.cpp, affecting the prediction.
+-Added DefenseLocation parameter in BuildingPlacer.cpp
+-Changed BuildingTask functions to pass in the full BuildOrderItems, with the defense location in BuildingManager.cpp
+-Modded the extractor trick for compatibility in ProductionManager.cpp, now creates a BuildingOrderItem instead of simply passing in Gas Steal
+-Changed StrategyBossZerg.cpp to use MineralLine defense locations for vultures
+
+Patch 12.5
+Changed zergling priority for runaway workers
+Fixed lots of random bugs I can't remember
+Improved lurkers at some point
+
+Patch 12
+Allowed zerglings to ignore zerglings when regrouping.
+Turned off the code that makes hydralisks kite back from non-threats like corsairs...
+Cleaned up priority code and simplified it for all the managers. 
+
+Patch 9-11
+Added "regroup" as an order to execute micro and allowed units to fight to the death if they detect they are being flanked. Fixed bugs related to this.
+Put back zergling retreat code, increased retreating distance for zerglings.
+Ignoring summed damage from nearly zerglings now... for now. 
+Modified combat sim for zerglings, neglects faraway zerglings now as well. 
+
+
+Semi-Patch 8
+I tweaked the Protoss builds to fit the anti-Protoss rush meta. 
+... need to implement sunken placement and zergling avoidance next thing. 
+
+
+Semi-Patch 7
+//Increased the range to trigger combat sim in Squad.cpp from 4*32 (128) to..
+Removed the range to trigger combat sim
+Added the guardian to combat sim as a pseudo-Battlecruiser for allies
+Added carriers/devourers/guardians to look like weak battlecruisers for enemies
+Turned off the combat sim check that ignores all air units
+Turned off the combat sim canceler that avoids checking when nothing is in range
+Limited numbers of lurkers/guardians/devourers to a certain number or ratio
+Modified protoss upgrades to prefer missile/carapace instead of missile/melee
+Added in one base sunken lurkers as an anti-Protoss rush build with 45% probability!
+
+Patch 6
+Added guardian tech
+Made a workaround for greater spire being unable to research Lair Tech
+Removed zergling "stacking" behavior for now
+Adjusted macro code some more
+Made it so that versus-zerg macro hatcheries are always built at the main unless rich
+Increased economy ratio from .35 to .4 for Protoss
+Added in upgrading code for missile attacks, alternating, varies against different races
+Tweaked builds for some specific matchups like Vajda and Stone but untested
+Going to put patching on a break for a while
+
+Patch 5
+Revamped and simplified macro code
+Revamped upgrading code
+Adding lurkers
+Rigged lurkers to be the tech target for testing purposes
+Fixed a couple bugs
+
+Patch 4
+Tweaked splitting and stacking behavior of mutalisks, zerglings
+Tweaked random bias of zerglings
+
+Patch 3
+-Modified mutalisk kiting code to chase non-threats that are non-special (will not try to chase buildings or workers unless) when weapon is on cooldown. Will now chase units better when attacking.
+-Made low-HP mutalisks retreat if their target is a threat and they aren't anywhere near attacking them. 
+-Adding chasing + random noise to zergling movement towards closeby enemy targets that aren't practically
+in melee range already.
+-Sparcraft SIM now counts turrets twice. Mutalisks better not engage those suckers alone!
+-Mutalisk attack bug adjusted by giving more time for mutalisk to register attack.
+-Splitting added for mutalisks in certain cases [irradiate, corsairs, etc.]
+-Splitting added for zerglings in some cases
+-Rudimentary stacking added for mutalisks... not perfect. 
+-More changes than I can remember, tweaking, tuning values
+
+Patch 2
+-Melee units now prioritize depots/bunkers near chokepoints very highly (quickfix for a wall). 
+-Actually prioritized repairing workers over bunkers/turrets
+-Deprioritized faraway turrets/cannons/spores/etc.
+-Allow faraway targets to pass by again, by increasing the cutoff range substantially. 
+The cutoff was causing it to ignore critical buildings/units like pylons and workers.
+
+-Integrated a more accurate assessment of when to retreat for individual melee units,
+including the summed damage of melee enemies nearby. This will cause zerglings to retreat from
+unfavorable engagements and avoid suiciding into probe lines. Zerglings will no longer retreat
+if there are no threats nearby even if low on HP. Zerglings also stay within 4 range of 
+enemy range, waiting until they are able to attack again. 
+
+Patch 1
+Added priority changes to deprioritize faraway targets
+Prioritized repairing workers over bunkers/turrets
+
+Patch 0
+-Modified attack priorities on ranged units and lurkers to:
+-Have higher priority for repairing workers than bunkers, but threats are still higher priority
+-Prioritize spires
+-Lurkers will not prioritize spawning pool

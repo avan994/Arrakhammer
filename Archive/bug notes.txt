@@ -1,0 +1,9 @@
+See possible directions for more fixes/changes.
+
+Harvesting empty minerals still does not work. 
+
+The speed computation for range clipping in ranged manager is still inaccurate, not accounting for unit upgrades like zerglings, hydralisks, ultralisks, vultures, shuttles. 
+
+Lurkers should move toward the closest chokepoint when on defense.
+
+Steamhammer will retreat from an enemy base to defend itself even if it can win by simply destroying every building. Lost a game this way. 

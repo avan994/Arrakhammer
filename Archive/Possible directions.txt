@@ -1,0 +1,395 @@
+In the absence of an army, the scout drone should leave the enemy base and keep track of where the enemy army is. 
+
+Should get it to pull zerglings if a defiler is pulled. 
+
+Should defend regions which are reserved for bases and escort the drones there. Could work out better. 
+
+
+
+Simcity Zerg notes:
+-Place the sunken colonies and make the building manager use them, and we're generally OK.
+-Filter results by checking that to-base chokepoint and to-outside chokepoint are on opposite sides.
+-Select the result that places the second hatchery closer to the to-outside chokepoint. 
+-For some bases, which may select the wrong chokepoint, for optimal scoring, need to either delay computation until we take the base, score dynamically, or consider only the exit relative to main bases. 
+
+--Going to just have to hard-code the simcity for Destination, sunken colonies included. This is too hard for the bot to figure out algorithmically.
+---How do we decide where to place sunkens? 
+Fighting Spirit: Up to 7x5 box with upper/lower side checks. Top right: Den/evo below the hatchery. Hatchery to the right. Similar for the bottom left. 
+Empire of the Sun: Evolution-Chamber only wall with some sunken colony room checks
+Icarus: Top location: Evolution chamber beneath hatchery, with hatchery beside it. Left: Upper/corner checks. Bottom: place hatchery next to the hatchery, or den to right and then hatchery on top. 
+Jade: Bottom left: Enable corner checks. Bottom right and top left: Wall the chokepoint itself. Top right: Already found! Yay! (but needs to select the better solution)
+La Mancha: Top left. Upper checks. Bottom left. (Best solution is to wall chokepoint imperfectly. Alternative solutions: Settle for hatchery above evo chamber. Possibly another solution on the left, did not display terrain. Same thing symmetrically for top right. But: other solution would be less safer for drones vs. ranged) Bottom right: Lower checks. 
+Roadrunner: Top right & bottom left. Try upper/lower checks. Top left & bottom right: Settle for hatchery above evo chamber. Less optimal: settle for imperfectly walling chokepoint.
+Andromeda. All locations: Wall chokepoint imperfectly. 
+Tau Cross: Top right. Fully wall the choke or just place evo chamber by hatchery. Bottom right: Fully wall the choke or check 7x3 by right of hatchery. Top left: Upper check to right of hatchery is best. Fully wall choke also option, but somewhat far. 
+Neo Moon Glaive. Top: Settle for evo chamber above hatchery. Left: Evo chamber to right of hatchery, hatchery just above it. Right: Found it already! Good!
+Benzene: Wall chokepoint imperfectly. (Bottom left: Evo chamber by hatchery on other side. Top right already found it) Or evo chamber above hatchery. Any three of these solutions will work. Probably best to go with evo chamber on side. 
+Python: Top righter. 7x4 or 7x5 works but does not prevent runby. Could deter runby with evo-hydra-hatchery wall around ramp. Nothing works perfectly for lefter side, best to wall ramp again; could maybe check if evo-below-hatchery with another hatchery-below-evo works. Topper right: Already found! Perfect. Bottomer left: Hatchery by hatchery, and place sunkens behind it. Unique case. 
+
+Could borrow McRave's grid code for zergling retreat; he said it was fine if I did so. See: https://github.com/Cmccrave/McRave
+Code for retreat is in CommandManager(?).
+We could potentially use this to decide where to situate overlords as well. 
+
+Units need to be very fast to do scarab dodging with current code. Could make avoidance radius higher for slower unit speed. Have already increased for drones.
+
+Should note drone hazards and consider evacuating a base.
+
+Need to decrease drone transfer suicide. Currently the code delays sending drones for some time in gas transfers and 
+
+It can get stuck without producing overlords with a single zergling in the queue at 17/17. And it might cancel a hatchery in the 5pool build. Very weird. 
+
+Don't include the enemy unit's kite vector if it's got its back turned to us and is longer/same ranged. Might resolve some problems like chasing mutalisks/goliaths. 
+
+If for some reason we have idle workers and a building expansion, we can send the workers to harvest there. 
+
+The expansion code uses the original minerals/gas values, which is wrong for depleted bases. It would be better to check the base minerals instead when we call the 
+
+High-speed hydralisks can do a runby as well, although primarily applicable against bunkers. 
+
+We specifically want to send the survey lord to the enemy's most likely next base(s). 
+
+Fresh production plan is called whenever the production queue is empty, and its goal is to spend all resources --- this means it squashes tech priorities when the resources are too low to tech, but high enough to produce (cheaper) units. Expensive upgrades, such as carapace and many other tech, thus happen very infrequently. These need to be given a higher priority. 
+
+-Notes from bftjoe
+-Apparently, latency compensation can cause the values returned from BWAPI to be unreliable. At the same time, Steamhammer appears to be reliant on it. Unclear how to fix that. 
+
+Zerglings need tscmooz-like flanking. 
+
+Production queue can get completely stuck on Defiler's Mound, apparently. It tries to rebuild it, and fails. Should cancel the building entirely if all the requirements are gone, off-book.  
+
+One DT/HT is destroyed during a morph. This could potentially cause bugs in storing the unit info, and hence in the combat sim with "ghost DTs" around.
+There's only two times we would save larva: for a mutalisk timing or for a zergling timing. This being situational, hard-coding such a reaction would not be a bad idea. Likewise for gas harvesting regarding the creation of the first spire. Specifically, if we have 2 hatcheries, start harvesting gas upon spire creation --> 600 gas and start saving larva about halfway through it [340 x 3 out of 1500] --> could queue up nHatches*3 mutalisks to accomplish these, mostly
+
+Not getting upgrades at all is silly, especially in ZvP. Should look into that. 
+
+Need error checking for stuck workers --- either stuck behind other buildings or while trying to build an extractor. 
+
+Stuck production queue still happens. Likely spore colonies, but not sure. Also, stuck extractors. Likely due to builder drones literally getting stuck somewhere. And sometimes, getting stuck on the geyser itself. 
+
+Mutalisk priority for harass -- compute defense levels by aggregating over known units in defense range of a certain unit. Compute the defense level of enemy units by checking the defenses around them -- likewise, compute the defender level. Use these to decide which targets to go after while harassing a base. Workers/turrets/cannons/tech are highest priority. 
+
+----Defiler notes
+-Reactive swarm placement seems to work just fine in most cases. 
+-Could still use some improvement
+---Have implemented a naive defiler algorithm. Ideally we should use leftmost or topmost side.
+ dark swarm advance-placement algorithm... for every allied unit, find the closest enemy unit... try the box as placed around the midpoint between allied and enemy unit... if this box contains a maximal number of paths from allied to closest enemy unit, it is optimal... Approximate paths by... computing midpoints first (or maybe projected positions a few frames into the future), then select the box with the most midpoints in it, maybe. If the midpoint is already in the region of a dark swarm, ignore it. We don't cast dark swarm if there are an insufficient number of points compared to the enemy density. 
+--Plague box placement: For every enemy unit, find all units in a box, fixing the left side of the box to unit's x and iterating over y with as much specificity as we want. Compute the box score by damage and mineral value. This gives the optimal box, since the unit-leftmost box is provably optimal. We can then find the bounding box of units inside said box, and angle it towards the defiler's position to find the defiler-specific optimal box. Problem: What about allied units? 
+---it turns out plague has a delay. may want to search a wider box before casting and use the projected positions to be fully accurate [though, this would be computationally expensive].
+ 
+Cache a list of safe spots for overlords to camp, perhaps done through some future map processing tools. Iterate through these lists for slowlords. 
+
+Zerg simcity scoring algorithm:
+Define two areas A and B on either side of the zerg "wall" where region A is base-side and region B is invader-side. Set out a roughly square area of buildable tiles in a region of interest. The region of interest must be of a specified minimum size, or we give up trying to form the wall. The region of interest must be sufficiently close to creep that it may be covered in creep by placing a single creep colony. 
+--Select the region of interest as the closest rectangle next to the relevant hatchery, angled in the direction of the nearest chokepoint.
+---To determine the path, place down a "path" tile [32x32]. Path tiles must neighbor buildings that are placed in the CSP, cannot be placed on nonwalkable tiles, and must never form a full cycle (hence, path tiles must only neighbor up to two path tiles). Verify, including building gaps, that all "path tiles" form walkable 38x32 units. 
+
+1. Buildings must follow the following constraints. We do not worry about zealot or zergling-tightness as long as these constraints are upheld. 
+-Evolution chambers next to hatcheries must be to the right, or below, a hatchery. 
+-Dens may be anywhere relative to hatcheries, except above.
+-Dens and evolution chambers may be to any side of each other and of terrain.
+-Hatcheries are not preferred below terrain for zergling-tight walls. 
+2. The perimeter of the wall must be walkable on one side only, connecting regions A and B. The other side must connect to a terrain feature. Failing this constraint, we merely wish the minimum perimeter length between regions A and B be as small as possible (define some point as the "center" of A and B for computation). 
+3. The perimeter of the wall must be formed of ultralisk-sized (38x32) or lurker-sized tiles or we-don't-care depending on whether we are willing to stop production of said units. It is acceptable if the perimeter is bigger than 2x2 tiles, but a minimally sized perimeter is preferred. 
+4. The perimeter of the wall must be as long as possible. This is generally satisfied by default by satisfying point 1 and 5, but incorporating point 7 may help.
+5. There must be as much room in region A for sunken colonies as possible - a minimum of 2. 
+6. It is preferred that the side of the perimeter of the wall is selected such that it increases the length of the runby path. 
+7. The perimeter may incorporate neighboring buildings and terrain, but it must factor them into calculations. 
+
+May need to dynamically split into multiple squads to prevent combat sim from being too problematic. 
+
+To ensure intended sunkens are sunkens and intended spores are spores, we can save a map of their intended ones and morph based on that. 
+
+Under-construction resource depots and SCVs should be destroyed especially when they're the second base.
+
+Could finish up the code that makes blocking units move out of the way if we're highly concerned about ideal placement of buildings later. However, we should do said ideal placement first. 
+
+If a hydralisk is on the edge of its range, turn around for an attack sooner, since the turntime is the limiting factor rather than the cooldown. 
+
+Low HP units, especially mutalisks and zerglings, should have a "harass state" where they only go after things that pose no threat and follow the kite vector otherwise. Zerglings vs. workers should be more cautious if near mineral fields. 
+
+The bot is notably weak against DT/Corsair -- it seems like it handles DTs poorly, in the simulator and in combat. Ground units should retreat from nearby DTs until they have detection, preferably running towards detection. 
+
+
+General rules of thumb: 
+-Could decrease the number of bases we take and make more macro hatcheries earlier instead.
+-Keep the evolution chamber/spire researching critical upgrades... unless we don't plan to get any air/ground units in some case. They need to be planned 3 whole minutes in advance. 
+-Get tech as late as needed. 
+-Get extractor/gas as late as possible and necessary for a build.
+--This includes whether we want to build multiple extractors at once and harvest at once. Can replace the drone by mining earlier. 
+-Harvest gas as late as needed for a build. Stop harvesting as soon as we don't need it. 
+-Get drones as early as possible.
+-Stack up larva if we want units in a tech burst.  
+-All money should be spent in ZvZ, unless we are saving larva for something. 
+-Don't get tech we don't need.
+-Check the enemy's upgrades to know what upgrades we might need. 
+
+-DONE: Optimal base saturation.
+-DONE: Minimized worker transfers. 
+
+
+Extra:
+-Always extractor trick, or extractor, off a 9pool. 
+----------
+Notes:
+Gas mining rate is 103/minute, and minerals is about 65/minute. 
+
+Tech Tree and Time
+
+Note: 300 corresponds to 12.5 seconds, 1500 to 62.5 seconds. 
+
+Hatchery ([1800])[350] --> Extractor (600)[100], Pool (1200)[250], Evolution Chamber (600)[125] --> Den (600)[150/50]
+Larva (~327 frames) --> 9 Drones / N = 2943 / N ~~ 122.625 / N
+
+Lair (1500)[150/100] --> Queen's Nest (900)[200/100], Spire (1800)[250/200]
+
+Hive (1800)[200/150] ---> Ultralisk Cavern (1200)[200/200], Defiler's Mound (900)[150/100], Greater Spire (1800)[100/150]
+
+Defense: Colony (300), Sunken/Spore (300)
+
+Upgrades:
+Burrow (1200)
+Evolutions: 4000 + lvl*480 frames
+Pool: Metabolic Boost (1500), Adrenal Glands (1500)
+Den: Grooved Spines (1500), Muscular Augments (1500), Lurker Aspect (1800)
+Overlords: Ventral Sacs (2400), Antennae (2000), Pneumatized Carapace (2000)
+Queens: Gamete Meiosis (2500), Spawn Broodlings (1200), Ensnare (1200)
+Ultralisks: Chitinous Plating (2000), Anabolic Synthesis (2000)
+Defilers: Consume (1500), Plague (1500), Metasynaptic Node (2500)
+--------
+
+
+Could add in a simple wall vector. Cancel out any invalid movement beyond the bounds of the map and add a pushback effect. Or: Create a vortex in the same direction as the moving unit. It could be tangential for terrain features, circular/square for the map boundary.
+
+The number of defenders per enemy unit in each region should depend more on what type of unit is there.
+
+Defenders should not regroup if they are outside the defense zone targeting something inside... 
+
+If we have prior history of enemy units but no idea where the enemy base is:
+1. If they are closest to another region, accumulate the number of units sighted near said base and head there. This should be done at any given time -- the enemy is likely to lead us to their base. 
+2. If no units are near another base, such that they are closest to our base, accumulate their velocities when we first sight them and head towards the base in the direction they arrived.
+3. Can use the scout timing and velocity to determine whether an enemy is cross-map. Very late scouts are likely adjacent in the direction perpendicular to the velocity. Very early scouts are definitely adjacent in the direction parallel to the velocity. Medium-early scouts are likely cross-map. 
+
+Consider buildings adjacent to common ground defense buildings as "walls" and put them in as a special priority. Need to target exposed gateways/forges against FFE/cannons.
+
+We wrote the code for special priorities but have not standardized the priority values -- so right now it is best only for ranged units. Need to ensure the correct priorities are assigned across managers. Could simplify the code by having some common priorities. 
+
+Mutalisks should have a preference for the least defended base with more drones. Undefended nexuses can be left alive for zerglings to clean up. 
+
+tscmoop's silly cannon contain gave my bot some trouble. Could pull drones with radius of 1200 --- but reduced to radius 600 as it would false flag upon seeing an FFE in fog of war and pull drones. For main base we still heck 1200. Would be advisable to commit to sending zerglings to the nearly defenseless enemy base while ignoring the cannons. [Would technically need hatchery-specific control and map processing optimally]
+
+
+Could try to have overlords move towards locations where the enemy has no vision. 
+
+Before we can use the tangent vector (potential fields for rotating around an object), we need a way to checking enemies that are in fog, of ensuring units are sufficiently grouped, and deciding when to use the tangent vector. 
+
+Could have energy/shield-units dodge EMP missiles, air units dodge valkyrie shots. Need to check for irradiated allies/enemies in our radius. We should trust our own irradiated units to do the right thing and move away on their own, unless they are not moving for some reason. 
+
+Still not sure why the original means of scarab dodging, crashed. Verify the scarab itself exists, maybe, along with its target. Improve scarab dodging with using the target. Check if the scarab's target exists before using its position. Otherwise simply use the velocity. Use the velocity at close range to the scarab and use the target at longer range, if possible. 
+Code from Skynet:
+"
+if(mUnit && mUnit->exists())
+	{
+		const BWAPI::UnitType &type = mUnit->getType();
+		if(type == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine)
+		{
+			if(mUnit->getTarget())
+				return mUnit->getTarget()->getPosition();
+			else
+				return mUnit->getPosition();
+		}
+		else if(type == BWAPI::UnitTypes::Protoss_Scarab)
+		{
+			if(mUnit->getTarget())
+				return mUnit->getTarget()->getPosition();
+			else
+				return BWAPI::Positions::Invalid;
+		}
+		else
+			return mUnit->getPosition();
+	}
+	else if(mBullet && mBullet->exists())
+	{
+		const BWAPI::BulletType &type = mBullet->getType();
+		if(type == BWAPI::BulletTypes::Psionic_Storm)
+			return mBullet->getPosition();
+		else if(type == BWAPI::BulletTypes::EMP_Missile)
+			return mBullet->getTargetPosition();
+	}
+"
+
+It turns out workers previously issued a return cargo order can still be on Idle/PlayerGuard mode. This should likely be applied to all micro commands. 
+
+Combat worker control should be deferred to the melee manager.
+
+The condition for hydralisk Advancing should be the raw DPS-difference between non-in-range-to-attack allies and non-in-range-to-attack enemies (except... can we access this without crashing...?). 
+-actually, it may be better to think of it as the damage increase ratio between the two, i.e., final/initial dmg. Then compare the ratios to figure out whether the final state is desirable compared to the current state?
+
+Wrote a SmartTravel function --- needs to have a pathfinding algorithm later. 
+
+Our boolean in InformationManager for needAirDefense is not very sensible. Should change it to a better long-term solution.
+
+The way Sparcraft handles medics is a big limitation, especially when we have hydralisks. It's not so bad for mutalisks which can burst marines downn. 
+
+On some maps, the region is completely wrong and causes units to defend an empty zone that's not a base --> zerglings suicide. Not sure how we could fix that, though. 
+
+Overlord distribution should account for the chance of an overlord dying before moving it to a neutral base. 
+
+There are still two highly problematic rushes:
+Reaction to proxy rax:
+--Pull drones [~8 drones needed, to oneshot a marine, so 4+ drones to 2-shot] 
+-Whatever hatchery is being attacked, cancel it at last second
+-If we don't have a pool, immediately make one
+-Spam lings nonstop until the threat abides, then hunt down the proxy rax and finish the game
+Reaction to proxy gate:
+--2 Sunkens up the main, cancel expansion hatchery at last second, build lings, go backstab protoss / kill pylon on gates
+
+Could restructure the code to handle and kite cloaked/flying units. Currently many of the managers entirely omit processing enemies that units cannot target, and hence, cannot kite them. 
+
+In case of an emergency (getting cheesed), queue non-essential buildings to be canceled at 99% complete. 
+
+Turn off attempts to expand if we don't have map control, or our expanding drones recently died. Could call back some units to exterminate the offenders, too, if our mutalisks happen to be attacking the enemy base instead. 
+
+Reserving tiles along the path didn't feel quite right --- going along the chokepoints was inaccurate and ugly. Maybe there's a better way to deal with walling. 
+
+Could lower priority for carriers deep in impassable terrain.
+
+Hydralisk/devourer/defiler should be the composition of choice against carriers. Or devourer/mutalisk if we have lots of air upgrades. Need to make the unit selection more flexible, potentially. 
+
+It's possible that a set unit limit might cause the _gasUnit to not change fast enough to account for the actual desired unit types. This could be problematic for defilers and queens and ultralisks as we could get an unintended influx of mineral units. May be best to dynamically adjust the unit as our composition changes. 
+
+Spore colonies against mutalisks if we're on multiple bases and waiting for tech. 
+
+Could write code to land infested command centers. 
+
+--Note: Decidedly there are too many local minima in using simple potential fields to be practical for mutalisks in-base harassment. Unless we can resolve that, it'll be rough. 
+-Potential fields for unit traveling across map and towards enemy bases? Should have a preference for close but poorly defended enemy bases. We should start by adding this to mutalisks. 
+--Considered in the past: Units do not necessarily choose the best escape route when running away. Mutalisks in main base tried to run past missile turrets in the natural.
+
+Implemented hold position lurkers, but they aren't ambushing anybody still. Might need to make them a little more brave. Perhaps, we could add a bunch to the SpecOps team and have them lie in wait without ever retreating...
+
+Zerglings may exhibit unusual behavior around chokepoints due to the surround/concave code. It would be a massive pain to fix it since chokepoint computation is inaccurate, but if it's possible, it would be a good idea to do so.
+
+Should change the range clipping to consider enemy range upgrades, as well as other enemy-dependent factors.
+
+We reduced worker transfer and allowed recovery of building/move workers, but have not solved the underlying problems of unsafe worker transfers, and redundant worker assignments to buildings. 
+
+Detect bullets from bunker?
+
+Need a better worker AI. 
+---Could surround sunken colony, help defend it.
+---Maybe they should keep fighting against zerglings and units when high on HP
+---Fight against units that are not facing them 
+
+Need to make certain units [hydralisks/mutalisks/zerglings] wait to bunch up before moving out or fighting. 
+
+Make it so units move out of the way when a creep colony/critical building needs to be built somewhere consistently. Right now, units' per-frame orders likely still take priority. 
+
+In addition to BWAPI not supporting the following, the code in productionManager, which gets a singular producer type, might be responsible for greater spire/hive being unable to research spire/lair/hatchery tech. 
+
+Incomplete buildings that are part of a Terran wall are more vulnerable than complete ones, since they can't be repaired. Should probably prioritize them first. 
+
+Burrow mechanism
+Timing:
+ZvZ: No point unless we have hive tech and excess resources due to overlords. 
+ZvT: Sometime after spire/lurker this may be useful, but not having mutas/lurkers is bad
+ZvP: Get it early. See how it does. 
+
+
+-Zergling and drone specific
+-Drones: Only consider burrowing if highly damaged, and undetectable (<20 hp)
+--Burrow if a threat is within attack range
+--Unburrow if no threats are within siege tank range, or hp exceeds 30. 
+
+-Zergling: Only consider burrowing if highly damaged, unable to flee, and undetectable (<15 hp)
+--Burrow if a threat is within attack range
+--Unburrow if no threats are within siege tank range, or HP exceeds 25.
+--What about vultures? Stay burrowed until HP exceeds 25 if terran is known to have vultures out. 
+
+Other burrow behavior:
+-Burrow if on defense/trap mode
+--Unburrow if a threat enters siege tank range
+
+
+
+-Could use it to pick up units about to be hit by a projectile and then put it down right after. 
+
+Overlord drop strategies
+Consider using drop squad code
+-Combine with lurkers, ultralisks, zerglings, defilers
+--Overlord drops units into safe zone in main base if possible
+---no enemy air units to intercept
+--Overlord determines whether it is safe to stay or necessary to escape
+
+
+
+Make drones run, hide or fight when an undefended base is under attack,
+and loss is imminent
+-Currently drones will simply die by default if under attack
+-Run in direction of nearest defense building or closest allied base, 
+or simply away from the enemy if isolated 
+-Mark base as unsafe location until enemies are defeated, then mark safe again
+-Return to normal drone pool for reassignment
+
+
+
+Overlord save mechanism
+
+Dodgeables of unknown type:
+Broodling
+
+Special unit types that can be dodged/entered:
+Dark swarms
+Disruption web
+Scans -- only visible in 4.2.0, not in the current BWAPI version!
+
+A list of bullets that can and can't be dodged:
+-------------------------------------------------
+"Air" projectiles:
+constexpr BulletType 	Anti_Matter_Missile {Enum::Anti_Matter_Missile}
+constexpr BulletType 	Corrosive_Acid_Shot {Enum::Corrosive_Acid_Shot}
+constexpr BulletType 	Gemini_Missiles {Enum::Gemini_Missiles}
+constexpr BulletType 	Longbolt_Missile {Enum::Longbolt_Missile}
+constexpr BulletType 	Seeker_Spores {Enum::Seeker_Spores}
+
+Undodgeable:
+constexpr BulletType 	Arclite_Shock_Cannon_Hit {Enum::Arclite_Shock_Cannon_Hit}
+constexpr BulletType 	C_10_Canister_Rifle_Hit {Enum::C_10_Canister_Rifle_Hit}
+constexpr BulletType 	Consume {Enum::Consume}
+constexpr BulletType 	Dual_Photon_Blasters_Hit {Enum::Dual_Photon_Blasters_Hit}
+constexpr BulletType 	Fusion_Cutter_Hit {Enum::Fusion_Cutter_Hit}
+constexpr BulletType 	Gauss_Rifle_Hit {Enum::Gauss_Rifle_Hit}
+??? constexpr BulletType 	Invisible {Enum::Invisible}
+??? constexpr BulletType 	Melee {Enum::Melee}
+constexpr BulletType 	Needle_Spine_Hit {Enum::Needle_Spine_Hit}
+constexpr BulletType 	None {Enum::None}
+constexpr BulletType 	Psionic_Shockwave_Hit {Enum::Psionic_Shockwave_Hit}
+constexpr BulletType 	Plague_Cloud {Enum::Plague_Cloud}
+constexpr BulletType 	Unknown {Enum::Unknown}
+
+Maybe dodgeable
+constexpr BulletType 	ATS_ATA_Laser_Battery {Enum::ATS_ATA_Laser_Battery}
+constexpr BulletType 	Burst_Lasers {Enum::Burst_Lasers}
+constexpr BulletType 	Consume {Enum::Consume}
+constexpr BulletType 	Glave_Wurm {Enum::Glave_Wurm}
+constexpr BulletType 	Optical_Flare_Grenade {Enum::Optical_Flare_Grenade}
+constexpr BulletType 	Yamato_Gun {Enum::Yamato_Gun}
+
+Dodgeable
+constexpr BulletType 	Fragmentation_Grenade {Enum::Fragmentation_Grenade}
+constexpr BulletType 	Phase_Disruptor {Enum::Phase_Disruptor}
+
+Very dodgeable
+constexpr BulletType 	EMP_Missile {Enum::EMP_Missile}
+constexpr BulletType 	Ensnare {Enum::Ensnare}
+constexpr BulletType 	Halo_Rockets {Enum::Halo_Rockets}
+constexpr BulletType 	Psionic_Storm {Enum::Psionic_Storm}
+constexpr BulletType 	Sunken_Colony_Tentacle {Enum::Sunken_Colony_Tentacle}
+constexpr BulletType 	Subterranean_Spines {Enum::Subterranean_Spines}
+constexpr BulletType 	Acid_Spore {Enum::Acid_Spore}
+
+No Idea what these are
+constexpr BulletType 	Particle_Beam_Hit {Enum::Particle_Beam_Hit}
+constexpr BulletType 	Pulse_Cannon {Enum::Pulse_Cannon}
+constexpr BulletType 	Queen_Spell_Carrier {Enum::Queen_Spell_Carrier}
+constexpr BulletType 	STA_STS_Cannon_Overlay {Enum::STA_STS_Cannon_Overlay}
+---------------------------------------------------
