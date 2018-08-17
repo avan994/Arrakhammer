@@ -77,8 +77,7 @@ namespace Config
 		bool DrawUnitOrders					= false;
         bool DrawSquadInfo                  = false;
         bool DrawBOSSStateInfo              = false;
-
-		bool DrawMapDistances				= false; //SH 1.2.3, likely not used anywhere
+		bool DrawMapDistances				= false; 
 
         std::string ErrorLogFilename        = "Arrakhammer_ErrorLog.txt";
         bool LogAssertToErrorFile           = false;
@@ -108,8 +107,6 @@ namespace Config
 		double WorkersPerPatch              = 2.0;
         int BuildingSpacing                 = 1;
         int PylonSpacing                    = 3;
-
-		int ProductionJamFrameLimit			= 360;		//SH 1.2.3, likely not used anywhere
     }
 
     namespace Tools								

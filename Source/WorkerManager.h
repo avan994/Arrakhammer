@@ -92,7 +92,6 @@ public:
 	bool		shouldPullWorker(BWAPI::Unit);
 
     bool        willHaveResources(int mineralsRequired,int gasRequired,double distance);
-    //void        rebalanceWorkers(); //deprecated
 
     static WorkerManager &  Instance();
 };

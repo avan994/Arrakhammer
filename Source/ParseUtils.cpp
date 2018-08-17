@@ -108,7 +108,6 @@ void ParseUtils::ParseConfigFile(const std::string & filename)
 		JSONTools::ReadInt("BOSSFrameLimit", macro, Config::Macro::BOSSFrameLimit);
 		JSONTools::ReadInt("PylonSpacing", macro, Config::Macro::PylonSpacing);
 
-		Config::Macro::ProductionJamFrameLimit = GetIntByRace("ProductionJamFrameLimit", macro);
 		Config::Macro::BuildingSpacing = GetIntByRace("BuildingSpacing", macro);
 		Config::Macro::WorkersPerRefinery = GetIntByRace("WorkersPerRefinery", macro);
 		Config::Macro::WorkersPerPatch = GetDoubleByRace("WorkersPerPatch", macro);

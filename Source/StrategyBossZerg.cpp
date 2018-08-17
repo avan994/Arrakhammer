@@ -31,23 +31,13 @@ StrategyBossZerg::StrategyBossZerg()
 	_economyTotal = 0;
 	chooseEconomyRatio();
 
+	/*
 	std::string messages[12];
 	messages[0] = "GLHF";
-	messages[1] = "Shoutout: Thanks to bftjoe for sunken placement and bugfixes!";
-	messages[2] = "Shoutout: jaj22 and Ankmairdor helped with BWAPI/game mechanics!";
-	messages[3] = "Shoutout: Many bugs discovered thanks to FawxOW's McRave!";
-	messages[4] = "Shoutout: Thanks SSCAIT!";
-	messages[5] = "Shoutout: tscmoo2's and Ankmairdor's advice/aid evolved the hydralisks!";
-	messages[6] = "Shoutout: Thanks to Jay Scott for fantastic work on Steamhammer!";
-	messages[7] = "Shoutout: PurpleWave is often in chat!";
-	messages[8] = "Shoutout: Antiga provided amazing build order advice!";
-	messages[9] = "Shoutout: Thanks to nepeta for constructive criticism!";
-	messages[10] = "You wanna pizza me, boy?";
-	messages[11] = "Infestation com-- oh, wait, I'm in a new game now.";
-	
 	srand(unsigned int(time(NULL)));
 	int index = rand() % 12; //rand() % sizeof(messages)/ sizeof(*messages)
 	BWAPI::Broodwar->sendText(messages[index].c_str());
+	*/
 
 	if (_enemyRace == BWAPI::Races::Zerg) {
 		lurkerPreference = 0;

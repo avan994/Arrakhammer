@@ -170,7 +170,7 @@ void ProductionManager::manageBuildOrderQueue()
 			// don't actually loop around in here
 			// TODO because we don't keep track of resources used,
 			//      we wait until the next frame to build the next thing.
-			//      Can cause bad delays in late game!
+			//      Could cause bad delays in late game!
 			break;
 		}
 		else
@@ -438,7 +438,6 @@ void ProductionManager::create(BWAPI::Unit producer, BuildOrderItem & item)
 	}
 	else if (act.isUnit() && act.getUnitType().isAddon())
 	{
-		//BWAPI::TilePosition addonPosition(producer->getTilePosition().x + producer->getType().tileWidth(), producer->getTilePosition().y + producer->getType().tileHeight() - t.unitType.tileHeight());
 		producer->buildAddon(act.getUnitType());
 	}
 	// if we're dealing with a non-building unit
@@ -874,8 +873,6 @@ void ProductionManager::doExtractorTrick()
 	}
 	else if (_extractorTrickState == ExtractorTrick::DroneOrdered)
 	{
-		//_extractorTrickState = ExtractorTrick::None;
-
 		if (!_extractorTrickBuilding) {
 			BWAPI::Broodwar->printf("Invalid pointer!");
 		}

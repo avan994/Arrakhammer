@@ -610,9 +610,6 @@ bool CombatCommander::shouldPullWorkers(BWAPI::Position center) {
 			{
 				concerning = true;
 			}
-			/*else if (type.isBuilding()) { //drones shouldn't take on any other building type
-				return false;
-			}*/
 		}
 	}
 	if (concerning) return true;
@@ -659,6 +656,7 @@ void CombatCommander::updateSpecOpsSquad()
 		// get every unit of a lower priority and put it into an attack squad
 		bool isOverlord = unit->getType() == BWAPI::UnitTypes::Zerg_Overlord;
 
+		//sunken colonies and defense buildings are assigned to the specOps squad
 		if (unit->getType().isBuilding() &&
 			_squadData.canAssignUnitToSquad(unit, specOpsSquad))
 		{
@@ -810,7 +808,6 @@ void CombatCommander::updateSurveySquad()
 
 
 	int time = BWAPI::Broodwar->elapsedTime();
-	//int frames = BWAPI::Broodwar->getFrameCount();
 	if (BWAPI::Broodwar->elapsedTime() > 6 * 60) {
 		surveySquad.setSquadOrder(SquadOrder(SquadOrderTypes::Explore, MapGrid::Instance().getLeastExplored(), 100, "Scout the Map"));
 	}
@@ -949,7 +946,7 @@ BWAPI::Position CombatCommander::getHuntLocation() {
 		if (_squadData.getSquad("Flying").getUnits().size() < 7) {
 			return unit->getPosition();
 		}
-		//hunt down units that will give our ground forces/bases trouble
+		//hunt down units that will give ground forces/bases trouble
 		else if (unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode ||
 			unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode ||
 			unit->getType() == BWAPI::UnitTypes::Protoss_Reaver ||
@@ -960,9 +957,7 @@ BWAPI::Position CombatCommander::getHuntLocation() {
 		}
 	}
 
-
 	//found nothing of interest, resume normal function
-
 	return getMainAttackLocation();
 }
 
@@ -1052,17 +1047,7 @@ BWAPI::Position CombatCommander::getMainAttackLocation()
 			}
 		}
 
-		/*bool foundSomething = false;
-		for (auto & unit : enemyUnitsInArea)
-		{
-			if (unit->getType().isBuilding())
-			{
-				foundSomething = true;
-				break;
-			}
-		}*/
-		bool foundSomething = true;
-		if (foundSomething && distance < currentDistance) {
+		if (distance < currentDistance) {
 			farthestEnemyBasePosition = enemyBasePosition;
 			distance = currentDistance;
 		}

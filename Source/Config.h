@@ -103,7 +103,6 @@ namespace Config
 		extern int AbsoluteMaxWorkers;
 		extern int BuildingSpacing;
 		extern int PylonSpacing;
-		extern int ProductionJamFrameLimit;
 	}
 
 	namespace Tools

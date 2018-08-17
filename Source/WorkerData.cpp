@@ -62,8 +62,7 @@ void WorkerData::addDepot(BWAPI::Unit unit)
 
 void WorkerData::removeDepot(BWAPI::Unit unit)
 {	
-	//if (!unit || !unit->exists()) return; //presumably the depot is dead
-	
+	//usually used when the depot is dead
 	depots.erase(unit);
 	depotWorkerCount.erase(unit);
 	depotAverageMineralPosition.erase(unit);
@@ -156,7 +155,6 @@ void WorkerData::setWorkerJob(BWAPI::Unit unit, WorkerJob job, BWAPI::Unit jobUn
 void WorkerData::setWorkerJob(BWAPI::Unit unit, WorkerJob job, BWAPI::UnitType jobUnitType)
 {
 	if (!unit) { return; }
-
 	clearPreviousJob(unit);
 	workerJobMap[unit] = job;
 
@@ -164,10 +162,9 @@ void WorkerData::setWorkerJob(BWAPI::Unit unit, WorkerJob job, BWAPI::UnitType j
 	{
 		workerBuildingTypeMap[unit] = jobUnitType;
 	}
-
-	if (workerJobMap[unit] != Build)
+	else
 	{
-		BWAPI::Broodwar->printf("Something went horribly wrong");
+		BWAPI::Broodwar->printf("Called build-only setWorkerJob with wrong job");
 	}
 }
 
@@ -203,15 +200,12 @@ void WorkerData::clearPreviousJob(BWAPI::Unit unit)
 
         // remove a worker from this unit's assigned mineral patch
         addToMineralPatch(workerMineralAssignment[unit], -1);
-
-        // erase the association from the map
         workerMineralAssignment.erase(unit);
 	}
 	else if (previousJob == Gas)
 	{
 		refineryWorkerCount[workerRefineryMap[unit]] -= 1;
 		if (refineryWorkerCount[workerRefineryMap[unit]] < 0) {
-			//refineryWorkerCount[workerRefineryMap[unit]] = 0;
 			UAB_ASSERT(false, "Error: refinery worker count went below 0");
 		}
 		workerRefineryMap.erase(unit);
@@ -312,8 +306,6 @@ bool WorkerData::depotIsFull(BWAPI::Unit depot, double ratio)
 
 	int assignedWorkers = getNumAssignedWorkers(depot);
 	int mineralsNearDepot = getMineralsNearDepot(depot);
-
-	// BWAPI::Broodwar->drawTextMap(depot->getPosition() + BWAPI::Position(0, -12), "%d / %d Workers", assignedWorkers, mineralsNearDepot);
 
 	return assignedWorkers >= int (ratio * mineralsNearDepot + 0.5);
 }

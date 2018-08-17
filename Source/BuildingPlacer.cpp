@@ -17,9 +17,6 @@ BuildingPlacer::BuildingPlacer()
 		auto center = base->getPosition();
 		computeResourceBox(center);
 	}
-	/*BWAPI::Position start(InformationManager::Instance().getMyMainBaseLocation()->getPosition());
-    computeResourceBox(start);*/
-
 }
 
 BuildingPlacer & BuildingPlacer::Instance() 
@@ -51,10 +48,6 @@ void BuildingPlacer::computeResourceBox(BWAPI::Position center)
 		auto tp = unit->getTilePosition();
 		int x = unit->getPosition().x;
 		int y = unit->getPosition().y;
-
-		//could use these instead, but we already wrote the code
-		//int width = unit->getType().tileWidth();
-		//int height = unit->getType().tileHeight();
 
 		if (unit->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser) {
 			//typical x/y differences are 7/5
@@ -103,25 +96,7 @@ void BuildingPlacer::computeResourceBox(BWAPI::Position center)
 				if (yFar) reserveTiles(tp + py + py, 1, 1);
 			}
 		}
-
-
-		/*int x = unit->getPosition().x;
-		int y = unit->getPosition().y;
-
-		int left = x - unit->getType().dimensionLeft();
-		int right = x + unit->getType().dimensionRight() + 1;
-		int top = y - unit->getType().dimensionUp();
-		int bottom = y + unit->getType().dimensionDown() + 1;
-
-		_boxTop = top < _boxTop ? top : _boxTop;
-		_boxBottom = bottom > _boxBottom ? bottom : _boxBottom;
-		_boxLeft = left < _boxLeft ? left : _boxLeft;
-		_boxRight = right > _boxRight ? right : _boxRight;*/
     }
-
-	
-
-    //BWAPI::Broodwar->printf("%d %d %d %d", boxTop, boxBottom, boxLeft, boxRight);
 }
 
 // makes final checks to see if a building can be built at a certain location
@@ -183,11 +158,11 @@ bool BuildingPlacer::canBuildHereWithSpace(BWAPI::TilePosition position,const Bu
         return false;
     }
 
-    // height and width of the building
+    // building height & width
     int width(b.type.tileWidth());
     int height(b.type.tileHeight());
 
-    //make sure we leave space for add-ons. These types of units can have addons:
+    //leave space for add-ons
     if (b.type == BWAPI::UnitTypes::Terran_Command_Center ||
         b.type == BWAPI::UnitTypes::Terran_Factory ||
         b.type == BWAPI::UnitTypes::Terran_Starport ||
@@ -200,48 +175,48 @@ bool BuildingPlacer::canBuildHereWithSpace(BWAPI::TilePosition position,const Bu
     int startx = position.x - buildDist;
     int starty = position.y - buildDist;
     int endx   = position.x + width + buildDist;
-int endy = position.y + height + buildDist;
+	int endy = position.y + height + buildDist;
 
-if (b.type.isAddon())
-{
-	const BWAPI::UnitType builderType = b.type.whatBuilds().first;
-
-	BWAPI::TilePosition builderTile(position.x - builderType.tileWidth(), position.y + 2 - builderType.tileHeight());
-
-	startx = builderTile.x - buildDist;
-	starty = builderTile.y - buildDist;
-	endx = position.x + width + buildDist;
-	endy = position.y + height + buildDist;
-}
-
-if (horizontalOnly)
-{
-	starty += buildDist;
-	endy -= buildDist;
-}
-
-// if this rectangle doesn't fit on the map we can't build here
-if (startx < 0 || starty < 0 || endx > BWAPI::Broodwar->mapWidth() || endx < position.x + width || endy > BWAPI::Broodwar->mapHeight())
-{
-	return false;
-}
-
-// if space is reserved, or it's in the resource box, we can't build here
-for (int x = startx; x < endx; x++)
-{
-	for (int y = starty; y < endy; y++)
+	if (b.type.isAddon())
 	{
-		if (!b.type.isRefinery())
+		const BWAPI::UnitType builderType = b.type.whatBuilds().first;
+
+		BWAPI::TilePosition builderTile(position.x - builderType.tileWidth(), position.y + 2 - builderType.tileHeight());
+
+		startx = builderTile.x - buildDist;
+		starty = builderTile.y - buildDist;
+		endx = position.x + width + buildDist;
+		endy = position.y + height + buildDist;
+	}
+
+	if (horizontalOnly)
+	{
+		starty += buildDist;
+		endy -= buildDist;
+	}
+
+	// if this rectangle doesn't fit on the map we can't build here
+	if (startx < 0 || starty < 0 || endx > BWAPI::Broodwar->mapWidth() || endx < position.x + width || endy > BWAPI::Broodwar->mapHeight())
+	{
+		return false;
+	}
+
+	// if space is reserved, or it's in the resource box, we can't build here
+	for (int x = startx; x < endx; x++)
+	{
+		for (int y = starty; y < endy; y++)
 		{
-			if (!buildable(b, x, y) || _reserveMap[x][y] || ((b.type != BWAPI::UnitTypes::Protoss_Photon_Cannon) && isInResourceBox(x, y)))
+			if (!b.type.isRefinery())
 			{
-				return false;
+				if (!buildable(b, x, y) || _reserveMap[x][y] || ((b.type != BWAPI::UnitTypes::Protoss_Photon_Cannon) && isInResourceBox(x, y)))
+				{
+					return false;
+				}
 			}
 		}
 	}
-}
 
-return true;
+	return true;
 }
 
 BWAPI::TilePosition BuildingPlacer::getBuildLocationNear(const Building & b, int buildDist, bool horizontalOnly) const
@@ -508,11 +483,8 @@ BWAPI::TilePosition BuildingPlacer::getRefineryPosition()
     int minGeyserDistanceFromHome = 100000;
 	BWAPI::Position homePosition = InformationManager::Instance().getMyMainBaseLocation()->getPosition();
 
-	// NOTE In BWAPI 4.2.1 getStaticGeysers() has a bug affecting geysers whose refineries
-	// have been canceled or destroyed: They become inaccessible. https://github.com/bwapi/bwapi/issues/697
-	// TODO still trying to work around the bug
-	// TODO could rewrite this to use BWTA instead of BWAPI; would not need the slow nested loop
-	//      loop through our bases (from InfoMan), then pick a geyser at that base
+	// iterates through all valid geysers
+	// whether or not they were previously built on and destroyed
 	for (auto & geyser : BWAPI::Broodwar->getGeysers())
 	{
 		if (!geyser || !geyser->exists()) {

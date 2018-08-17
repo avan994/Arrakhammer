@@ -44,8 +44,6 @@ void WorkerManager::handleWorkers() {
 				order == BWAPI::Orders::ReturnMinerals) continue;
 
 			bool depotsExist = !workerData.getDepots().empty();
-			//BWAPI::Unit depot = workerData.getWorkerDepot(worker);
-			//if (!depot) depot = getClosestDepot(worker, true);
 			if (depotsExist) {
 				Micro::SmartReturnCargo(worker);
 				continue;
@@ -173,7 +171,6 @@ void WorkerManager::updateWorkerStatus()
 			BWAPI::Unit refinery = workerData.getWorkerResource(worker);
 
 			// If the refinery is gone. A missing resource depot is dealt with in handleGasWorkers().
-
 			if (!refinery || !refinery->exists() || refinery->getHitPoints() <= 0)
 			{
 				workerData.removeRefinery(refinery);
@@ -182,7 +179,7 @@ void WorkerManager::updateWorkerStatus()
 			else
 			{
 				if (refinery->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser) {
-					UAB_ASSERT(false, "There's an untaken geyser in the refinery list.");
+					UAB_ASSERT(false, "Untaken geyser found in refinery list.");
 				}
 
 				auto resource = workerData.getWorkerResource(worker);
@@ -280,7 +277,6 @@ void WorkerManager::handleGasWorkers()
 
 
 		// Don't collect gas if gas collection is off, or if the resource depot is missing.
-
 		int maxAssignedWorkers = Config::Macro::WorkersPerRefinery;
 		if (!refineryHasDepot(unit)) { // If any workers are assigned, take them off.
 			maxAssignedWorkers = 0;
@@ -289,8 +285,8 @@ void WorkerManager::handleGasWorkers()
 		// Assign or de-assign workers from harvesting
 		int numAssigned = workerData.getNumAssignedWorkers(unit);
 		if (numAssigned > maxAssignedWorkers) {
-			if (maxAssignedWorkers == 3) {
-				UAB_ASSERT(false, "Error: Too many workers assigned to refinery somehow!");
+			if (maxAssignedWorkers > Config::Macro::WorkersPerRefinery) {
+				UAB_ASSERT(false, "Error: Too many workers assigned to refinery!");
 			}
 
 			std::set<BWAPI::Unit> gasWorkers;
@@ -300,7 +296,7 @@ void WorkerManager::handleGasWorkers()
 			{
 				if (workerData.getWorkerResource(gasWorker) != unit) continue;
 
-				if (gasWorker->getOrder() != BWAPI::Orders::HarvestGas)    // not inside the refinery
+				if (gasWorker->getOrder() != BWAPI::Orders::HarvestGas) // not inside the refinery
 				{
 					workerData.setWorkerJob(gasWorker, WorkerData::Idle, nullptr);
 					n--;
@@ -310,14 +306,10 @@ void WorkerManager::handleGasWorkers()
 			}
 		}
 		else {
-			//for (int i = 0; i < (maxAssignedWorkers - numAssigned); ++i)
-			if (numAssigned < maxAssignedWorkers) 
-				//we assign at most 1 worker per frame
+			if (numAssigned < maxAssignedWorkers) //assign at most 1 worker per frame, per refinery
 			{
 				if (numAssigned > 0 && !unit->isBeingGathered()) continue; 
 				//avoid colliding with other workers
-				//if for some reason this gas is far away from any workers at all, we want
-				//to send very few workers to it, so not sending many is an acceptable side effect 
 
 				BWAPI::Unit gasWorker = getGasWorker(unit);
 				if (gasWorker)
@@ -325,9 +317,7 @@ void WorkerManager::handleGasWorkers()
 					workerData.setWorkerJob(gasWorker, WorkerData::Gas, unit);
 				}
 				//we only assign if there's a near enough worker for the gas;
-
-				//long distance gas worker transfers are only allowed every once in a while
-				//hence we continue the iteration over all refineries
+				//long distance gas worker transfers are allowed every once in a while
 			}
 		}
 	}
@@ -520,7 +510,7 @@ BWAPI::Unit WorkerManager::getClosestRefinery(BWAPI::Unit worker)
 }
 
 
-/* Get the best depot for constructing a new worker by level of saturation and larva count. */
+/* Get best depot for new worker by saturation and larva count. */
 BWAPI::Unit WorkerManager::getBestDepot() {
 	BWAPI::Unit depot = NULL;
 
@@ -530,7 +520,6 @@ BWAPI::Unit WorkerManager::getBestDepot() {
 	for (auto & unit : workerData.getDepots())
 	{
 		UAB_ASSERT(unit, "Unit was null");
-
 		auto type = unit->getType();
 
 		//we only want completed depots
@@ -556,9 +545,8 @@ BWAPI::Unit WorkerManager::getBestDepot() {
 					depot = unit;
 					bestLarvaCount = larvaCount;
 				}
-			} //we don't worry about the case where we have way too many workers for every base
-
-		} 
+			} 
+		} //for protoss and terran
 		else if (!unit->isTraining()) { //nexuses and command centers
 			if (!workerData.depotIsFull(unit, minWorkersPerPatch)) {
 				return unit;
@@ -591,16 +579,13 @@ BWAPI::Unit WorkerManager::getGasWorker(BWAPI::Unit refinery)
 
 	for (auto & unit : workerData.getWorkers())
 	{
-		UAB_ASSERT(unit, "Unit was null");
-
 		if (!isFree(unit)) continue;
 
+		//rate-limits worker transfers to far gas
 		double distance = unit->getDistance(refinery);
 		if (distance > 600 && currentFrame - _lastFrameWorkerGasTransfer < minTimeBetweenGasTransfer) {
 			continue;
 		}
-		//disallow worker transfers for gas from faraway locations
-		//except once every so often
 
 		if (!closestWorker || distance < closestDistance)
 		{
@@ -652,7 +637,6 @@ BWAPI::Unit WorkerManager::getBuilder(const Building & b, bool setJobAsBuilder)
 		if (!unit->isCompleted()) continue;
 
 		// mining/idle worker check
-		//if (workerData.getWorkerJob(unit) == WorkerData::Minerals)
 		if (isFree(unit))
 		{
 			// if it is a new closest distance, set the pointer
@@ -677,8 +661,7 @@ BWAPI::Unit WorkerManager::getBuilder(const Building & b, bool setJobAsBuilder)
 		}
 	}
 
-	// if we found a moving worker, use it, otherwise use a mining worker
-	// however if the moving worker is much farther, we should just use the mining worker - something could be wrong
+	// prefer closeby moving worker over mining workers, unless moving worker is very far -- moving worker may be stuck
 	BWAPI::Unit chosenWorker = (closestMovingWorker && closestMovingWorkerDistance < closestMiningWorkerDistance + 4*32) ? closestMovingWorker : closestMiningWorker;
 
 	// if the worker exists (one may not have been found in rare cases)
@@ -707,10 +690,8 @@ BWAPI::Unit WorkerManager::getMoveWorker(BWAPI::Position p)
 	// for each worker we currently have
 	for (auto & unit : workerData.getWorkers())
 	{
-        UAB_ASSERT(unit, "Unit was null");
-
 		// only consider it if it's a mineral worker
-		if (unit->isCompleted() && isFree(unit))//workerData.getWorkerJob(unit) == WorkerData::Minerals)
+		if (isFree(unit))
 		{
 			// if it is a new closest distance, set the pointer
 			double distance = unit->getDistance(p);
@@ -734,9 +715,7 @@ void WorkerManager::setMoveWorker(int mineralsNeeded, int gasNeeded, BWAPI::Posi
 
 	for (auto & unit : workerData.getWorkers())
 	{
-        UAB_ASSERT(unit, "Unit was null");
-
-		if (unit->isCompleted() && isFree(unit))//&& workerData.getWorkerJob(unit) == WorkerData::Minerals)
+		if (isFree(unit))
 		{
 			double distance = unit->getDistance(p);
 			if (!closestWorker || distance < closestDistance)
@@ -955,13 +934,13 @@ void WorkerManager::drawWorkerInformation(int x, int y)
 bool WorkerManager::isFree(BWAPI::Unit worker)
 {
     UAB_ASSERT(worker, "Worker was null");
-	return workerData.getWorkerJob(worker) == WorkerData::Minerals || workerData.getWorkerJob(worker) == WorkerData::Idle;
+	return (workerData.getWorkerJob(worker) == WorkerData::Minerals || workerData.getWorkerJob(worker) == WorkerData::Idle) && unit->isCompleted();
 }
 
 bool WorkerManager::isWorkerScout(BWAPI::Unit worker)
 {
-UAB_ASSERT(worker, "Worker was null");
-return (workerData.getWorkerJob(worker) == WorkerData::Scout);
+	UAB_ASSERT(worker, "Worker was null");
+	return (workerData.getWorkerJob(worker) == WorkerData::Scout);
 }
 
 bool WorkerManager::isBuilder(BWAPI::Unit worker)
