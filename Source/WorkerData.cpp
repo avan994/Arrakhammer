@@ -119,7 +119,7 @@ int WorkerData::computeTimeToMine(BWAPI::Unit worker, BWAPI::Unit mineral) {
 		mineralHarvestedTime[mineral] = 0;
 	}
 
-	if (time < mineralHarvestedTime[mineral]) { //worker will arrive there early, before it's been harvested
+	if (time < mineralHarvestedTime[mineral] && time > mineralHarvestedTime[mineral] - 200) { //worker will arrive there early, before it's been harvested
 		time = mineralHarvestedTime[mineral] + 80;
 	}
 	else { //worker will arrive there late, after it's been harvested
@@ -232,7 +232,10 @@ void WorkerData::clearPreviousJob(BWAPI::Unit unit)
 
 		workerDepotMap.erase(unit);
 
+		//reset the mineral's timer
+		mineralHarvestedTime[workerMineralAssignment[unit]] = BWAPI::Broodwar->getFrameCount();
         // remove a worker from this unit's assigned mineral patch
+
         addToMineralPatch(workerMineralAssignment[unit], -1);
         workerMineralAssignment.erase(unit);
 	}
@@ -439,7 +442,17 @@ BWAPI::Unit WorkerData::assignMineralToMine(BWAPI::Unit worker)
 
 	if (bestMineral != nullptr) {
 		workerMineralAssignment[worker] = bestMineral;
-		mineralHarvestedTime[bestMineral] = bestTime;
+		//the worker may be traveling a far distance
+		//in which case it's acceptable for another worker to cut in front of it
+		//so we only update the time if it's already closeby
+
+		//Note, that this system may behave suboptimally for long distance mining,
+		//but should suffice for testing purposes
+		//A properly done queue-using system that computes "time slot allocation" would indeed be more rigorous
+		//and the worker limit per mineral field should be dynamically determined. 
+		if (bestTime > mineralHarvestedTime[bestMineral] && bestTime - mineralHarvestedTime[bestMineral] < 200) {
+			mineralHarvestedTime[bestMineral] = bestTime;
+		}
 		addToMineralPatch(bestMineral, 1);
 	}
 
