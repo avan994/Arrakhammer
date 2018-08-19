@@ -36,12 +36,20 @@ void WorkerManager::handleWorkers() {
 		//had questionable value. needs more debugging. 
 
 		bool isCarrying = worker->isCarryingMinerals() || worker->isCarryingGas();
+
+		if (worker->isCarryingMinerals()) { 
+			//reset its mineral assignment to allow other workers to claim it,
+			//and so that it has to decide again once it's finished returning
+			workerData.eraseWorkerMineralAssignment(BWAPI::Unit);
+		}
+
 		if (isCarrying)
 		{
 			//it's already returning cargo
 			auto order = worker->getOrder();
-			if (order == BWAPI::Orders::ReturnGas ||
-				order == BWAPI::Orders::ReturnMinerals) continue;
+
+			if (order == BWAPI::Orders::ReturnGas || order == BWAPI::Orders::ReturnMinerals) 
+				continue;
 
 			bool depotsExist = !workerData.getDepots().empty();
 			if (depotsExist) {
@@ -99,7 +107,6 @@ void WorkerManager::handleWorkers() {
 			//this section of code is not tested, since the bot is primarily zerg 
 			//but should work for terran - Arrak
 		{
-			UAB_ASSERT(false, "Repair command issued. May need debugging. See WorkerManager.cpp");
 			if (executeSelfDefense(worker)) break;
 			auto target = workerData.getWorkerRepairUnit(worker);
 
@@ -112,10 +119,9 @@ void WorkerManager::handleWorkers() {
 			BWAPI::Broodwar->drawTextMap(worker->getPosition(), "%c", workerData.getJobCode(worker));
 			Micro::SmartTravel(worker, workerData.getWorkerMoveData(worker).position);
 			break;
-		case (WorkerData::Scout) :
+		//case (WorkerData::Scout) :
 			//still handled by scout manager
-			//should defer control to scout manager here
-			break;
+		//	break;
 		case (WorkerData::Default) : //incomplete workers
 			break;
 		default:
@@ -420,8 +426,6 @@ BWAPI::Unit WorkerManager::getWorkerScout()
 
     return nullptr;
 }
-
-
 
 // Send the worker to mine minerals at the closest resource depot, if any.
 void WorkerManager::putWorkerToWork(BWAPI::Unit unit)
@@ -869,14 +873,6 @@ void WorkerManager::onUnitDestroy(BWAPI::Unit unit)
 			workerData.removeRefinery(unit);
 		}
 	}
-	/*if (unit->getType().isRefinery()) {
-		//BWAPI::Broodwar->sendText("Dead extractor detected");
-		//this will trigger when enemy refineries are killed, too. the original check was not enough
-		workerData.removeRefinery(unit);
-	}*/
-
-	/*if (unit->getType() == BWAPI::UnitTypes::Resource_Mineral_Field)
-		rebalanceWorkers();*/
 }
 
 void WorkerManager::drawResourceDebugInfo() 

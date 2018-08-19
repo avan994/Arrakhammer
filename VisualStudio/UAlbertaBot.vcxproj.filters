@@ -297,14 +297,14 @@
     <ClInclude Include="..\Source\LurkerManager.h">
       <Filter>game\combat\micro</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\TankManager.h">
-      <Filter>game\combat</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Base.h">
       <Filter>game\util\map</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\FAP.h" />
     <ClInclude Include="..\Source\Random.h" />
     <ClInclude Include="..\Source\ZSimcity.h" />
+    <ClInclude Include="..\Source\TankManager.h">
+      <Filter>game\combat\micro</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

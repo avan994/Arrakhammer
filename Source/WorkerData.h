@@ -50,6 +50,7 @@ private:
 	std::unordered_map<BWAPI::Unit, int>				refineryWorkerCount;    // gas workers per refinery
 
 	std::unordered_map<BWAPI::Unit, int>				workersOnMineralPatch;  // workers per mineral patch
+	std::unordered_map<BWAPI::Unit, int>				mineralHarvestedTime;// estimated time when patch will be harvested by assigned workers
 	std::unordered_map<BWAPI::Unit, BWAPI::Unit>		workerMineralAssignment;// worker -> mineral patch
 
 	void clearPreviousJob(BWAPI::Unit unit);
@@ -63,6 +64,10 @@ public:
 	void					removeDepot(BWAPI::Unit unit);
 	void					addRefinery(BWAPI::Unit);
 	void					removeRefinery(BWAPI::Unit);
+
+	void					eraseWorkerMineralAssignment(BWAPI::Unit);
+	void					reassignWorkerToMineral(BWAPI::Unit);
+	int						computeTimeToMine(BWAPI::Unit, BWAPI::Unit);
 
 	void					addWorker(BWAPI::Unit unit);
 	void					addWorker(BWAPI::Unit unit, WorkerJob job, BWAPI::Unit jobUnit);
@@ -87,7 +92,7 @@ public:
 	int						getMineralsNearDepot(BWAPI::Unit depot);
 
 	int						getNumAssignedWorkers(BWAPI::Unit unit);
-	BWAPI::Unit				getMineralToMine(BWAPI::Unit worker);
+	BWAPI::Unit				assignMineralToMine(BWAPI::Unit worker);
 
 	enum WorkerJob			getWorkerJob(BWAPI::Unit unit);
 	BWAPI::Unit				getWorkerResource(BWAPI::Unit unit);

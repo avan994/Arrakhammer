@@ -82,7 +82,7 @@ void WorkerData::addRefinery(BWAPI::Unit unit)
 {
 	if (!unit || !unit->exists()) return;
 
-	assert(refineries.find(unit) == refineries.end());
+	UAB_ASSERT(refineries.find(unit) == refineries.end(), "Tried to add refinery twice");
 	refineries.insert(unit);
 	refineryWorkerCount[unit] = 0;
 }
@@ -91,6 +91,42 @@ void WorkerData::removeRefinery(BWAPI::Unit unit)
 {
 	refineries.erase(unit);
 	refineryWorkerCount.erase(unit);
+}
+
+void WorkerData::eraseWorkerMineralAssignment(BWAPI::Unit) {
+	if (workerMineralAssignment.find(unit) == workersOnMineralPatch.end()) 
+	{
+		return; //nothing to erase
+	}
+
+	addToMineralPatch(workerMineralAssignment[unit], -1);
+	workerMineralAssignment.erase(unit);
+}
+
+void WorkerData::reassignWorkerToMineral(BWAPI::Unit) {
+	UAB_ASSERT(workerJobMap[unit] == Minerals, "Unit with non-mineral job, reassigned to mineral");
+
+	assignMineralToMine(unit);
+}
+
+int WorkerData::computeTimeToMine(BWAPI::Unit worker, BWAPI::Unit mineral) {
+	double dist = worker->getDistance(mineral);
+	double speed = worker->getType().topSpeed();
+
+	int time = BWAPI::Broodwar->getFrameCount() + int(dist / speed);
+
+	if (mineralHarvestedTime.find(mineral) != workersOnMineralPatch.end()) {
+		mineralHarvestedTime[mineral] = 0;
+	}
+
+	if (time < mineralHarvestedTime[mineral]) { //worker will arrive there early, before it's been harvested
+		time = mineralHarvestedTime[mineral] + 80;
+	}
+	else { //worker will arrive there late, after it's been harvested
+		time = time + 80;
+	}
+
+	return time;
 }
 
 void WorkerData::addToMineralPatch(BWAPI::Unit unit, int num)
@@ -120,9 +156,7 @@ void WorkerData::setWorkerJob(BWAPI::Unit unit, WorkerJob job, BWAPI::Unit jobUn
 		// set the mineral the worker is working on
 		workerDepotMap[unit] = jobUnit;
 
-        BWAPI::Unit mineralToMine = getMineralToMine(unit);
-        workerMineralAssignment[unit] = mineralToMine;
-        addToMineralPatch(mineralToMine, 1);
+        assignMineralToMine(unit);
 	}
 	else if (job == Gas)
 	{
@@ -359,7 +393,10 @@ BWAPI::Unit WorkerData::getWorkerResource(BWAPI::Unit unit)
 		if (it != workerMineralAssignment.end())
 		{
 			return it->second;
-		}	
+		}
+		else {
+			return workerData.reassignWorkerToMineral(unit);
+		}
 	}
 	else if (getWorkerJob(unit) == Gas)
 	{
@@ -373,15 +410,14 @@ BWAPI::Unit WorkerData::getWorkerResource(BWAPI::Unit unit)
 	return nullptr;
 }
 
-BWAPI::Unit WorkerData::getMineralToMine(BWAPI::Unit worker)
+BWAPI::Unit WorkerData::assignMineralToMine(BWAPI::Unit worker)
 {
 	if (!worker) { return nullptr; }
 
 	// get the depot associated with this unit
 	BWAPI::Unit depot = getWorkerDepot(worker);
 	BWAPI::Unit bestMineral = nullptr;
-	double bestDist = 100000;
-    double bestNumAssigned = 10000;
+	double bestTime = 10000000000;
 
 	if (depot)
 	{
@@ -390,28 +426,21 @@ BWAPI::Unit WorkerData::getMineralToMine(BWAPI::Unit worker)
 		for (auto & mineral : mineralPatches)
 		{
             double numAssigned = workersOnMineralPatch[mineral];
+			if (workersOnMineralPatch[mineral] >= 2) continue; //no more than 2 per patch!
 
-			if (numAssigned >= 2 || numAssigned > bestNumAssigned) continue; //no more than 2 per patch!
-
-			double dist = mineral->getDistance(depot);
-
-            if (numAssigned < bestNumAssigned)
+			int time = computeTimeToMine(worker, mineral);
+            if (time < bestTime)
             {
                 bestMineral = mineral;
-                bestDist = dist;
-                bestNumAssigned = numAssigned;
+				bestTime = time;
             }
-			else //numAssigned == bestNumAssigned
-			{
-				if (dist < bestDist)
-                {
-                    bestMineral = mineral;
-                    bestDist = dist;
-                    bestNumAssigned = numAssigned;
-                }
-			}
-		
 		}
+	}
+
+	if (bestMineral != nullptr) {
+		workerMineralAssignment[worker] = bestMineral;
+		mineralHarvestedTime[bestMineral] = bestTime;
+		addToMineralPatch(bestMineral, 1);
 	}
 
 	return bestMineral;
